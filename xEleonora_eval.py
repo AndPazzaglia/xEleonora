@@ -7,7 +7,7 @@ import random
 
 #%% load model
 
-model_name = r"C:\Users\apazzaglia00\Documents\data science\ad Eleonora\lstm\xEleonora_model_02.h5"
+model_name = r"C:\Users\apazzaglia00\Documents\data science\ad Eleonora\lstm\xEleonora_model_v3_20.h5"
 model = load_model(model_name)
 input_size = 10
 
@@ -15,7 +15,26 @@ input_size = 10
     
 with open(r'C:\Users\apazzaglia00\Documents\data science\ad Eleonora\lstm\tokenizer.pkl', 'rb') as f:
     tokenizer = pickle.load(f)
+
+with open(r'C:\Users\apazzaglia00\Documents\data science\ad Eleonora\lstm\onehotencoder.pkl', 'rb') as f:
+    onehot = pickle.load(f)
     
+
+#%% author choice
+
+# author_name = 'ALDA MERINI'
+author_name = 'CAIO VALERIO CATULLO'
+# author_name = 'DINO BUZZATI'
+# author_name = 'WILLIAM WORDSWORTH'
+# author_name = 'EDGAR ALLAN POE'
+# author_name = 'EUGENIO MONTALE'
+# author_name = 'GIACOMO LEOPARDI'
+# author_name = 'GIUSEPPE UNGARETTI'
+# author_name = 'DANTE ALIGHIERI'
+# author_name = 'WILLIAM SHAKESPEARE'
+
+input_aut = onehot.transform(np.array([author_name]).reshape(1, -1))
+
 #%% model prediction
     
 out_lines_number = 14
@@ -30,7 +49,7 @@ elif len(input_seq[0]) < input_size:
     input_seq = input_seq.reshape(1, input_size)
 
 def predict_word(input_seq, model, tokenizer, temperature):
-    preds = model.predict(input_seq)
+    preds = model.predict([input_seq, input_aut])
     weights = preds**(1/temperature) / np.sum(preds**(1/temperature))
     weights = weights.reshape(len(tokenizer.word_index)+1)
     word_id = random.choices(population=np.arange(0, 1 + len(tokenizer.word_index)), weights=weights)
