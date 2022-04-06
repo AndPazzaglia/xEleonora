@@ -12,13 +12,16 @@ from os import path
 
 #%% load dataset, tokenizer, embeddings matrix
 
-with open(r'C:\Users\apazzaglia00\Documents\data science\ad Eleonora\lstm\clean_poetries_authors.pkl', 'rb') as f:
+auth_path = os.path.join('tokenization','clean_poetries_authors.pkl')
+with open(auth_path, 'rb') as f:
     clean_poetries_authors = pickle.load(f)
 
-with open(r'C:\Users\apazzaglia00\Documents\data science\ad Eleonora\lstm\tokenizer.pkl', 'rb') as f:
+tok_path = os.path.join('tokenization', 'tokenizer.pkl')
+with open(tok_path, 'rb') as f:
     tokenizer = pickle.load(f)
 
-with open(r'C:\Users\apazzaglia00\Documents\data science\ad Eleonora\lstm\embedding_matrix.pkl', 'rb') as f:
+emb_path = os.path.join('tokenization', 'embedding_matrix.pkl')
+with open(emb_path, 'rb') as f:
     embedding_matrix = pickle.load(f)
 
 #%% prepare dataset: add one hot encoding of authors

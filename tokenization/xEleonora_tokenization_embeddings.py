@@ -6,14 +6,15 @@ import numpy as np
 from gensim.models import KeyedVectors
 
 #%% load pre trained word embeddings
-word_vectors = KeyedVectors.load("W2V.kv", mmap='r+')
+filename = os.path.join('tokenization', 'W2V.kv')
+word_vectors = KeyedVectors.load(filename, mmap='r+')
 vocabs = word_vectors.index_to_key
 vectors = word_vectors.vectors
 
 #%% open poetries file and keep only authors with more than 5 poetries
 
-# filename = os.path.join()
-with open(r'C:\Users\apazzaglia00\Documents\data science\ad Eleonora\lstm\poestries_dict.pkl', 'rb') as f:
+filename = os.path.join('data_collection', 'poestries_dict.pkl')
+with open(filename, 'rb') as f:
     poetries_dict = pickle.load(f)
 
 poetries = []
@@ -91,14 +92,16 @@ for missed in tqdm(missed_words):
     poetries = [p.replace(missed, simil_word) for p in poetries]
 
 clean_poetries_authors = np.array([authors, np.array(poetries)])
-with open(r'C:\Users\apazzaglia00\Documents\data science\ad Eleonora\lstm\clean_poetries_authors.pkl', 'wb') as fp:
+filename = os.path.join('tokenization', 'clean_poetries_authors.pkl')
+with open(filename, 'wb') as fp:
     pickle.dump(clean_poetries_authors, fp)
 
 #%% final fit of tokenizer and embeddings matrix
 tokenizer = Tokenizer(filters='')
 tokenizer.fit_on_texts(poetries)
 
-with open(r'C:\Users\apazzaglia00\Documents\data science\ad Eleonora\lstm\tokenizer.pkl', 'wb') as fp:
+filename = os.path.join('tokenization', 'tokenizer.pkl')
+with open(filename, 'wb') as fp:
     pickle.dump(tokenizer, fp)
 
 # determine the vocabulary size
@@ -124,7 +127,8 @@ for word, i in tokenizer.word_index.items():
 
 print("Converted %d words (%d misses)" % (hits, misses))
 
-with open(r'C:\Users\apazzaglia00\Documents\data science\ad Eleonora\lstm\embedding_matrix.pkl', 'wb') as fp:
+filename = os.path.join('tokenization', 'embedding_matrix.pkl')
+with open(filename, 'wb') as fp:
     pickle.dump(embedding_matrix, fp)
 
 # %%
