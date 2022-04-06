@@ -17,12 +17,81 @@ filename = os.path.join('data_collection', 'poestries_dict.pkl')
 with open(filename, 'rb') as f:
     poetries_dict = pickle.load(f)
 
+# define authors to keep
+authors_to_keep = [
+    "JOHN KEATS",
+    "JOHN DONNE",
+    "LUIGI PIRANDELLO",
+    "ALDO PALAZZESCHI",
+    "ANNA ACHMATOVA",
+    "GIACOMO LEOPARDI",
+    "GIUSEPPE PARINI",
+    "SAFFO",
+    "EDMONDO DE AMICIS",
+    "FRANCESCO PETRARCA",
+    "WILLIAM WORDSWORTH",
+    "ROBERT FROST",
+    "DINO BUZZATI",
+    "MARCEL PROUST",
+    "VOLTAIRE",
+    "GUILLAUME APOLLINAIRE",
+    "EZRA POUND",
+    "JAMES JOYCE",
+    "GIUSEPPE UNGARETTI",
+    "SALVATORE QUASIMODO",
+    "WILLIAM BLAKE",
+    "JORGE LUIS BORGES",
+    "PRIMO LEVI",
+    "GABRIELE D ANNUNZIO",
+    "PAULO COELHO",
+    "EMILY DICKINSON",
+    "CHARLES BUKOWSKI",
+    "UMBERTO SABA",
+    "SAN PAOLO",
+    "FRIEDRICH SCHILLER",
+    "ARRIGO BOITO",
+    "WILLIAM SHAKESPEARE",
+    "CORRADO GOVONI",
+    "WILLIAM BUTLER YEATS",
+    "EDGAR ALLAN POE",
+    "VICTOR HUGO",
+    "ITALO CALVINO",
+    "ADA NEGRI",
+    "CARLO BETOCCHI",
+    "CESARE PAVESE",
+    "GIOVANNI PASCOLI",
+    "CHARLES BAUDELAIRE",
+    "JACK KEROUAC",
+    "GUIDO CAVALCANTI",
+    "CAIO VALERIO CATULLO",
+    "FRANCESCO D ASSISI",
+    "EDUARDO DE FILIPPO",
+    "THOMAS STEARNS ELIOT",
+    "NICCOLO UGO FOSCOLO",
+    "OSCAR WILDE",
+    "EUGENIO MONTALE",
+    "DANTE ALIGHIERI",
+    "PABLO NERUDA",
+    "ARTHUR RIMBAUD",
+    "ALESSANDRO MANZONI",
+    "RUDYARD KIPLING",
+    "ANNA FRANK",
+    "ALDA MERINI",
+    "PIER PAOLO PASOLINI",
+    "LEWIS CARROLL",
+    "GIOSUE CARDUCCI",
+    "GIORGIO CAPRONI",
+    "MICHELANGELO BUONARROTI"
+]
+
 poetries = []
 author_list = []
 for key in poetries_dict:
-    for p in poetries_dict[key]:
-        poetries.append(p)
-        author_list.append(key.replace('-', ' ').upper())
+    author = key.replace('-', ' ').upper()
+    if author in authors_to_keep:
+        for p in poetries_dict[key]:
+            poetries.append(p)
+            author_list.append(author)
 
 print('-------------------------')
 print('Totale poesie processate: {}'.format(len(poetries)))
