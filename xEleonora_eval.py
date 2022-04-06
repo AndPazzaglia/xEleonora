@@ -1,5 +1,5 @@
 #%%
-
+import os
 import pickle 
 from tensorflow.keras.models import load_model
 import numpy as np
@@ -7,16 +7,20 @@ import random
 
 #%% load model
 
-model_name = r"C:\Users\apazzaglia00\Documents\data science\ad Eleonora\lstm\xEleonora_model_v3_20.h5"
+
+model_name = "xEleonora_model_v3_20.h5"
+model_path = os.path.join('models', model_name)
 model = load_model(model_name)
 input_size = 10
 
 #%% load tokenizer
     
-with open(r'C:\Users\apazzaglia00\Documents\data science\ad Eleonora\lstm\tokenizer.pkl', 'rb') as f:
+tok_path = os.path.join("tokenization", "tokenizer.pkl")
+with open(tok_path, 'rb') as f:
     tokenizer = pickle.load(f)
 
-with open(r'C:\Users\apazzaglia00\Documents\data science\ad Eleonora\lstm\onehotencoder.pkl', 'rb') as f:
+onehot_path = os.path.join("tokenization", "onehotencoder.pkl")
+with open(onehot_path, 'rb') as f:
     onehot = pickle.load(f)
     
 

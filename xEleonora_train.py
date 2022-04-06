@@ -5,6 +5,8 @@ from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.models import Sequential, load_model
 from tensorflow.keras.layers import Dense, LSTM, Embedding, GRU, concatenate
 from tensorflow.keras import Input, Model
+from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.callbacks import ModelCheckpoint, TensorBoard
 import numpy as np
 import matplotlib.pyplot as plt
 import os
@@ -34,7 +36,8 @@ authors = authors.reshape(-1, 1)
 authors_onehot = onehot.fit_transform(authors)
 authors_number = len(authors_onehot[0])
 
-with open(r'C:\Users\apazzaglia00\Documents\data science\ad Eleonora\lstm\onehotencoder.pkl', 'wb') as fp:
+onehot_path = os.path.join('tokenization', 'onehotencoder.pkl')
+with open(onehot_path, 'wb') as fp:
     pickle.dump(onehot, fp)
 
 #%% prepare dataset: convert poetries to sequences
@@ -103,13 +106,13 @@ X_test_aut = X_test[:, input_size:]
 
 input_seq = Input(shape=(input_size,))
 emb = Embedding(vocab_size, 300, weights=[embedding_matrix], input_length=input_size, trainable=False)(input_seq)
-gru = GRU(128)(emb)
+gru = GRU(64)(emb)
 
 input_aut = Input(shape=(authors_number,))
 conc = concatenate([gru, input_aut])
 
-dense1 = Dense(256, activation='relu')(conc)
-dense2 = Dense(256, activation='relu')(dense1)
+dense1 = Dense(64, activation='relu')(conc)
+dense2 = Dense(64, activation='relu')(dense1)
 out = Dense(vocab_size, activation='softmax')(dense2)
 
 model = Model(inputs=[input_seq, input_aut], outputs=out)
@@ -117,35 +120,22 @@ model = Model(inputs=[input_seq, input_aut], outputs=out)
 print(model.summary())
 
 # compile network
-model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['sparse_categorical_accuracy'])
+opt = Adam(learning_rate=0.001)
+model.compile(loss='sparse_categorical_crossentropy', optimizer=opt, metrics=['sparse_categorical_accuracy'])
+
+# define checkpoint saving callback
+checkpoint_saving = ModelCheckpoint(
+    '/models', save_freq=1,
+)
 
 # fit network
-history = model.fit([X_train_seq, X_train_aut], y_train, epochs=10, verbose=1, batch_size=256, validation_data=([X_test_seq, X_test_aut], y_test))
-model.save("xEleonora_model_v3_10.h5")
+history = model.fit(
+    [X_train_seq, X_train_aut], y_train, epochs=50, verbose=1, 
+    batch_size=64, validation_data=([X_test_seq, X_test_aut], y_test),
+    callbacks=[checkpoint_saving, TensorBoard()])
 
-plt.figure()
-plt.plot(history.history['sparse_categorical_accuracy'])
-plt.plot(history.history['val_sparse_categorical_accuracy'])
-plt.show()
 
-#%% define model old structure
-
-# model = Sequential()
-# model.add(Embedding(vocab_size, 300, weights=[embedding_matrix], input_length=input_size, trainable=False))
-# model.add(LSTM(128))
-# model.add(Dense(vocab_size, activation='softmax'))
-# print(model.summary())
-
-# # compile network
-# model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['sparse_categorical_accuracy'])
-
-# # fit network
-# history = model.fit(X_train, y_train, epochs=50, verbose=1, batch_size=256, validation_data=(X_test, y_test))
-# model.save("xEleonora_model_v2.h5")
-
-# plt.plot(history.history['sparse_categorical_accuracy', 'val_sparse_categorical_accuracy'])
+# plt.figure()
+# plt.plot(history.history['sparse_categorical_accuracy'])
+# plt.plot(history.history['val_sparse_categorical_accuracy'])
 # plt.show()
-
-
-
-# %%
