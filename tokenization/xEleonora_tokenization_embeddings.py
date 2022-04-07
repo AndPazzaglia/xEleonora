@@ -102,15 +102,24 @@ print('-------------------------')
 
 #%% prepare dataset
 
-table = str.maketrans('', '', '!"#$%&\'()*+-/:;<=>?@[\\]^_`{|}~')
+table = str.maketrans('', '', '!"#$%&\'()*+-/:;<=>?@[\\]^_`{|}~»—…¹”¨«‘“¬ˆ')
 for i in range(len(poetries)):
     poetries[i] = poetries[i].lower()
     poetries[i] = poetries[i].replace("\r", "")
     poetries[i] = poetries[i].replace("\n", " \n ")
     poetries[i] = poetries[i].replace("  ", " ")
+    poetries[i] = poetries[i].replace("â€™", "'")
     poetries[i] = poetries[i].replace("’", " ")
-    poetries[i] = poetries[i].replace(",", " ,")
-    poetries[i] = poetries[i].replace(".", " .")
+    poetries[i] = poetries[i].replace(",", " , ")
+    poetries[i] = poetries[i].replace(".", " . ")
+    poetries[i] = poetries[i].replace("  ", " ")
+    poetries[i] = poetries[i].replace("ú", "ù")
+    poetries[i] = poetries[i].replace("ã", "a")
+    poetries[i] = poetries[i].replace("â", "a")
+    poetries[i] = poetries[i].replace("í", "ì")
+    poetries[i] = poetries[i].replace("ô", "o")
+    poetries[i] = poetries[i].replace("a©", "è")
+    poetries[i] = poetries[i].replace("ï", "i")
     poetries[i] = poetries[i].translate(table)
 poetries = np.array(poetries)
 authors = np.array(author_list)
@@ -193,8 +202,13 @@ for word, i in tokenizer.word_index.items():
     else:
         misses += 1
         missed_words.append(word)
+        if word != '\n':
+            missed = ' ' + word + ' '
+            # replace whole words with space
+            poetries = [p.replace(missed, ' ') for p in poetries]
 
 print("Converted %d words (%d misses)" % (hits, misses))
+print(missed_words)
 
 filename = os.path.join('tokenization', 'embedding_matrix.pkl')
 with open(filename, 'wb') as fp:
