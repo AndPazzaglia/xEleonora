@@ -8,8 +8,8 @@ import random
 #%% load model
 
 
-model_name = "xEleonora_model_v3_20.h5"
-model_path = os.path.join('models', model_name)
+model_name = "models"
+# model_path = os.path.join('models', model_name)
 model = load_model(model_name)
 input_size = 10
 

@@ -125,7 +125,7 @@ model.compile(loss='sparse_categorical_crossentropy', optimizer=opt, metrics=['s
 
 # define checkpoint saving callback
 checkpoint_saving = ModelCheckpoint(
-    '/models', save_freq=1,
+    'models\epoch_{epoch}', save_freq='epoch',
 )
 
 # fit network
