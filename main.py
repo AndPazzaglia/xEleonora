@@ -12,9 +12,9 @@ st.sidebar.write(
     'Fill the following inputs and then hit the Run button!')
 
 #%% load model
-model_name = "models"
-# model_path = os.path.join('models', model_name)
-model = load_model(model_name)
+model_name = "epoch_3"
+model_path = os.path.join('models', model_name)
+model = load_model(model_path)
 
 #%% choice of the author style
 auth_path = os.path.join('tokenization','clean_poetries_authors.pkl')

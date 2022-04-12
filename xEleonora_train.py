@@ -65,8 +65,8 @@ X = np.array(X)
 y = np.array(y)
 y_emb = np.array(y_emb)
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
-X_train, X_test, y_emb_train, y_emb_test = train_test_split(X, y_emb, test_size=0.3, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+X_train, X_test, y_emb_train, y_emb_test = train_test_split(X, y_emb, test_size=0.2, random_state=42)
 
 X_train_seq = X_train[:, 0:input_size]
 X_train_aut = X_train[:, input_size:]
@@ -106,13 +106,13 @@ X_test_aut = X_test[:, input_size:]
 
 input_seq = Input(shape=(input_size,))
 emb = Embedding(vocab_size, 300, weights=[embedding_matrix], input_length=input_size, trainable=False)(input_seq)
-gru = GRU(64)(emb)
+gru = GRU(128)(emb)
 
 input_aut = Input(shape=(authors_number,))
 conc = concatenate([gru, input_aut])
 
-dense1 = Dense(64, activation='relu')(conc)
-dense2 = Dense(64, activation='relu')(dense1)
+dense1 = Dense(128, activation='relu')(conc)
+dense2 = Dense(128, activation='relu')(dense1)
 out = Dense(vocab_size, activation='softmax')(dense2)
 
 model = Model(inputs=[input_seq, input_aut], outputs=out)
@@ -120,7 +120,7 @@ model = Model(inputs=[input_seq, input_aut], outputs=out)
 print(model.summary())
 
 # compile network
-opt = Adam(learning_rate=0.001)
+opt = Adam(learning_rate=0.01)
 model.compile(loss='sparse_categorical_crossentropy', optimizer=opt, metrics=['sparse_categorical_accuracy'])
 
 # define checkpoint saving callback
