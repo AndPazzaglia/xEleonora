@@ -5,7 +5,7 @@ import numpy as np
 import random
 
 def EvalModel(model, author_name, input_words, out_lines_number, temperature):
-    input_size = 10
+    input_size = 20
 
     #%% load tokenizer        
     tok_path = os.path.join("tokenization", "tokenizer.pkl")

@@ -48,7 +48,7 @@ encoded = tokenizer.texts_to_sequences(poetries)
 vocab_size = len(tokenizer.word_index) + 1
 print('Vocabulary Size: %d' % vocab_size)
 
-input_size = 10
+input_size = 32
 X = []
 y = []
 y_emb = []
@@ -106,14 +106,16 @@ X_test_aut = X_test[:, input_size:]
 
 input_seq = Input(shape=(input_size,))
 emb = Embedding(vocab_size, 300, weights=[embedding_matrix], input_length=input_size, trainable=False)(input_seq)
-gru = GRU(128)(emb)
+gru = GRU(128, return_sequences=True)(emb)
+gru = GRU(128)(gru)
 
 input_aut = Input(shape=(authors_number,))
 conc = concatenate([gru, input_aut])
 
-dense1 = Dense(128, activation='relu')(conc)
-dense2 = Dense(128, activation='relu')(dense1)
-out = Dense(vocab_size, activation='softmax')(dense2)
+dense1 = Dense(256, activation='relu')(conc)
+# dense2 = Dense(128, activation='relu')(dense1)
+# out = Dense(vocab_size, activation='softmax')(dense2)
+out = Dense(vocab_size, activation='softmax')(dense1)
 
 model = Model(inputs=[input_seq, input_aut], outputs=out)
 
@@ -130,12 +132,12 @@ checkpoint_saving = ModelCheckpoint(
 
 # fit network
 history = model.fit(
-    [X_train_seq, X_train_aut], y_train, epochs=50, verbose=1, 
+    [X_train_seq, X_train_aut], y_train, epochs=100, verbose=1, 
     batch_size=64, validation_data=([X_test_seq, X_test_aut], y_test),
     callbacks=[checkpoint_saving, TensorBoard()])
 
 
-# plt.figure()
-# plt.plot(history.history['sparse_categorical_accuracy'])
-# plt.plot(history.history['val_sparse_categorical_accuracy'])
-# plt.show()
+plt.figure()
+plt.plot(history.history['sparse_categorical_accuracy'])
+plt.plot(history.history['val_sparse_categorical_accuracy'])
+plt.show()

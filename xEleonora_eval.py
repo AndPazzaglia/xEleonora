@@ -4,11 +4,11 @@ from tensorflow.keras.models import load_model
 from utils.EvalModel import EvalModel
 
 #%% load model
-model_name = "epoch_2"
+model_name = "epoch_7"
 model_path = os.path.join('models', model_name)
 model = load_model(model_path)
 final_output = EvalModel(
-    model, author_name='DANTE ALIGHIERI', input_words='il tuo sorriso', out_lines_number=13, temperature=0.2)
+    model, author_name='ALDA MERINI', input_words='il tuo sorriso', out_lines_number=13, temperature=0.5)
 
 print('--------------------------------------------------------')
 print(final_output)
